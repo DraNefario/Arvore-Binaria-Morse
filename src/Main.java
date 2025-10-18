@@ -8,5 +8,12 @@ public class Main {
         arvore.inserir("...", 'S');
         arvore.inserir("---", 'O');
 
+
+        System.out.println("Estrutura da arvore:");
+        arvore.exibirMorse();
+
+        System.out.println("\nBusca individual:");
+        System.out.println("... = " + arvore.buscar("..."));  // S
+        System.out.println("--- = " + arvore.buscar("---"));  // O
     }
 }

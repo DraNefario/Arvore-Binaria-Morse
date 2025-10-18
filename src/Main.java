@@ -44,8 +44,44 @@ public class Main {
         System.out.println("Estrutura da arvore:");
         arvore.exibirMorse();
 
+        System.out.println("Estrutura da arvore:");
+        arvore.exibirMorse();
+
         System.out.println("\nBusca individual:");
-        System.out.println("... = " + arvore.buscar("..."));  // S
+        System.out.println("----. = " + arvore.buscar("----."));  // 9
+        System.out.println("----. = " + arvore.buscar("----."));  // 9
+        System.out.println("--... = " + arvore.buscar("--..."));  // 7
+        System.out.println("- = " + arvore.buscar("-"));  // T
+        System.out.println("..- = " + arvore.buscar("..-"));  // U
+        System.out.println(".-. = " + arvore.buscar(".-."));  // R
+        System.out.println("-... = " + arvore.buscar("-..."));  // B
         System.out.println("--- = " + arvore.buscar("---"));  // O
+
+
+        System.out.println("\nMensagem completa:");
+        String mensagemMorse = ".--. --- .-. ... -.-. .... .";
+        String[] codigo = mensagemMorse.split(" ");
+        String resultado = "";
+
+        for (int i = 0; i < codigo.length; i++) {
+            resultado = resultado + arvore.buscar(codigo[i]);
+        }
+        System.out.println(mensagemMorse + " = " + resultado);
+
+        System.out.println("\nnumero com 3 digitos:");
+        String numeroMorse = "----. .---- .----";
+        String[] numero = numeroMorse.split(" ");
+        String numeroResultado = "";
+
+        for (int i = 0; i < numero.length; i++) {
+            numeroResultado = numeroResultado + arvore.buscar(numero[i]);
+        }
+        System.out.println(numeroMorse + " = " + numeroResultado);
+
+
+
+        System.out.println("\nRemovendo 'S' (...):");
+        arvore.remover("...");
+        System.out.println("Buscar ... apos remocao: " + arvore.buscar("..."));
     }
 }

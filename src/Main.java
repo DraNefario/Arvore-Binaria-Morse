@@ -1,87 +1,109 @@
+import java.util.Scanner;
+
 public class Main {
-    public static void main(String[] args) {
-        ArvoreBinariaMorse arvore = new ArvoreBinariaMorse();
 
-        arvore.inserir(".-", 'A');
-        arvore.inserir("-...", 'B');
-        arvore.inserir("-.-.", 'C');
-        arvore.inserir("-..", 'D');
-        arvore.inserir(".", 'E');
-        arvore.inserir("..-.", 'F');
-        arvore.inserir("--.", 'G');
-        arvore.inserir("....", 'H');
-        arvore.inserir("..", 'I');
-        arvore.inserir(".---", 'J');
-        arvore.inserir("-.-", 'K');
-        arvore.inserir(".-..", 'L');
-        arvore.inserir("--", 'M');
-        arvore.inserir("-.", 'N');
-        arvore.inserir("---", 'O');
-        arvore.inserir(".--.", 'P');
-        arvore.inserir("--.-", 'Q');
-        arvore.inserir(".-.", 'R');
-        arvore.inserir("...", 'S');
-        arvore.inserir("-", 'T');
-        arvore.inserir("..-", 'U');
-        arvore.inserir("...-", 'V');
-        arvore.inserir(".--", 'W');
-        arvore.inserir("-..-", 'X');
-        arvore.inserir("-.--", 'Y');
-        arvore.inserir("--..", 'Z');
+    public static void main(String[] argumentos) {
+        ArvoreBinariaMorse arvoreBinariaMorse = new ArvoreBinariaMorse();
+        Scanner leitor = new Scanner(System.in);
 
-        arvore.inserir("-----", '0');
-        arvore.inserir(".----", '1');
-        arvore.inserir("..---", '2');
-        arvore.inserir("...--", '3');
-        arvore.inserir("....-", '4');
-        arvore.inserir(".....", '5');
-        arvore.inserir("-....", '6');
-        arvore.inserir("--...", '7');
-        arvore.inserir("---..", '8');
-        arvore.inserir("----.", '9');
+        while (true) {
+            System.out.println();
+            System.out.println("Escolha uma opção:");
+            System.out.println("1) Traduzir (Morse → Texto ou Texto → Morse)");
+            System.out.println("2) Exibir caminho de um código Morse");
+            System.out.println("3) Remover um símbolo pelo código Morse");
+            System.out.println("4) Exibir árvore (hierárquica)");
+            System.out.println("5) Buscar código Morse de uma letra ou número");
+            System.out.println("6) Converter palavra/frase (A–Z, 0–9) para Morse");
+            System.out.println("0) Sair");
+            System.out.print("Opção: ");
 
+            String opcao = leitor.nextLine();
 
-        System.out.println("Estrutura da arvore:");
-        arvore.exibirMorse();
+            if (opcao.equals("0")) {
+                break;
 
-        System.out.println("Estrutura da arvore:");
-        arvore.exibirMorse();
+            } else if (opcao.equals("1")) {
+                System.out.println("Digite uma linha (Morse com '.' '-' separados por espaço OU texto A–Z/0–9):");
+                String linha = leitor.nextLine();
 
-        System.out.println("\nBusca individual:");
-        System.out.println("----. = " + arvore.buscar("----."));  // 9
-        System.out.println("----. = " + arvore.buscar("----."));  // 9
-        System.out.println("--... = " + arvore.buscar("--..."));  // 7
-        System.out.println("- = " + arvore.buscar("-"));  // T
-        System.out.println("..- = " + arvore.buscar("..-"));  // U
-        System.out.println(".-. = " + arvore.buscar(".-."));  // R
-        System.out.println("-... = " + arvore.buscar("-..."));  // B
-        System.out.println("--- = " + arvore.buscar("---"));  // O
+                if (ehProvavelmenteMorse(linha)) {
+                    String texto = arvoreBinariaMorse.traduzirMorseParaTexto(linha);
+                    System.out.println("Resultado: " + texto);
+                } else {
+                    String morse = arvoreBinariaMorse.traduzirTextoParaMorse(linha);
+                    System.out.println("Resultado: " + morse);
+                }
 
+            } else if (opcao.equals("2")) {
+                System.out.print("Informe o código Morse (ex.: .-): ");
+                String codigoMorse = leitor.nextLine();
+                arvoreBinariaMorse.exibirCaminho(codigoMorse);
 
-        System.out.println("\nMensagem completa:");
-        String mensagemMorse = ".--. --- .-. ... -.-. .... .";
-        String[] codigo = mensagemMorse.split(" ");
-        String resultado = "";
+            } else if (opcao.equals("3")) {
+                System.out.print("Informe o código Morse a remover (ex.: .-): ");
+                String codigoMorse = leitor.nextLine();
 
-        for (int i = 0; i < codigo.length; i++) {
-            resultado = resultado + arvore.buscar(codigo[i]);
+                String antes = arvoreBinariaMorse.buscarPorMorse(codigoMorse);
+                System.out.println("Antes da remoção: \"" + antes + "\"");
+
+                arvoreBinariaMorse.remover(codigoMorse);
+
+                String depois = arvoreBinariaMorse.buscarPorMorse(codigoMorse);
+                System.out.println("Depois da remoção: \"" + depois + "\" (vazio significa removido)");
+
+            } else if (opcao.equals("4")) {
+                arvoreBinariaMorse.exibir();
+
+            } else if (opcao.equals("5")) {
+                System.out.print("Informe uma letra ou número (A–Z ou 0–9): ");
+                String entrada = leitor.nextLine();
+                String caractere = extrairPrimeiroCaractereNaoEspaco(entrada);
+                if (caractere.equals("")) {
+                    System.out.println("Entrada inválida.");
+                } else {
+                    String codigo = arvoreBinariaMorse.buscarPorCaractere(caractere.toUpperCase());
+                    if (codigo.equals("")) {
+                        System.out.println("Não encontrado para: " + caractere.toUpperCase());
+                    } else {
+                        System.out.println("Código Morse de '" + caractere.toUpperCase() + "': " + codigo);
+                    }
+                }
+
+            } else if (opcao.equals("6")) {
+                System.out.print("Digite a palavra ou frase (A–Z, 0–9): ");
+                String texto = leitor.nextLine();
+                String morse = arvoreBinariaMorse.traduzirTextoParaMorse(texto);
+                System.out.println("Resultado: " + morse);
+
+            } else {
+                System.out.println("Opção inválida.");
+            }
         }
-        System.out.println(mensagemMorse + " = " + resultado);
 
-        System.out.println("\nnumero com 3 digitos:");
-        String numeroMorse = "----. .---- .----";
-        String[] numero = numeroMorse.split(" ");
-        String numeroResultado = "";
+        leitor.close();
+    }
 
-        for (int i = 0; i < numero.length; i++) {
-            numeroResultado = numeroResultado + arvore.buscar(numero[i]);
+    private static boolean ehProvavelmenteMorse(String linha) {
+        if (linha == null) return false;
+        if (linha.length() == 0) return false;
+
+        int indice = 0;
+        while (indice < linha.length()) {
+            char caractere = linha.charAt(indice);
+            if (caractere != '.' && caractere != '-' && caractere != ' ' && caractere != '/') {
+                return false;
+            }
+            indice = indice + 1;
         }
-        System.out.println(numeroMorse + " = " + numeroResultado);
+        return true;
+    }
 
-
-
-        System.out.println("\nRemovendo 'S' (...):");
-        arvore.remover("...");
-        System.out.println("Buscar ... apos remocao: " + arvore.buscar("..."));
+    private static String extrairPrimeiroCaractereNaoEspaco(String texto) {
+        if (texto == null) return "";
+        int indice = 0;
+        while (indice < texto.length() && texto.charAt(indice) == ' ') indice = indice + 1;
+        if (indice >= texto.length()) return "";
+        return String.valueOf(texto.charAt(indice));
     }
 }
